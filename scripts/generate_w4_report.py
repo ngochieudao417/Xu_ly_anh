@@ -5,7 +5,9 @@ from __future__ import annotations
 import csv
 import json
 from collections import defaultdict
+import sys
 from pathlib import Path
+
 
 from docx import Document
 from docx.enum.table import WD_TABLE_ALIGNMENT
@@ -14,6 +16,8 @@ from docx.shared import Cm, Pt, RGBColor
 from docx.oxml import OxmlElement
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT))
+from src.report_images import optimized  # noqa: E402
 OUT = ROOT / "outputs" / "w4"
 REPORT = ROOT / "reports" / "Bao_cao_Task_W4.docx"
 
@@ -40,6 +44,7 @@ def table(doc, headers, rows):
 def picture(doc, filename, caption):
     path = OUT / filename
     if not path.exists(): return
+    path = optimized(path)
     t = doc.add_table(rows=1, cols=1)
     tr_pr = t.rows[0]._tr.get_or_add_trPr()
     tr_pr.append(OxmlElement("w:cantSplit"))

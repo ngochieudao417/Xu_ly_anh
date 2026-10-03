@@ -24,6 +24,7 @@ from docx.oxml.ns import qn
 from docx.shared import Pt, RGBColor, Inches
 
 from src import config as cfg
+from src.report_images import optimized
 from src import validation, preprocessing, features
 
 BLACK = RGBColor(0, 0, 0)
@@ -93,7 +94,7 @@ def add_figure(doc, path: Path, caption: str, width_in=6.0):
     p = doc.add_paragraph()
     p.alignment = WD_ALIGN_PARAGRAPH.CENTER
     run = p.add_run()
-    run.add_picture(str(path), width=Inches(width_in))
+    run.add_picture(str(optimized(path)), width=Inches(width_in))
     cap = doc.add_paragraph()
     cap.alignment = WD_ALIGN_PARAGRAPH.CENTER
     run = cap.add_run(caption)

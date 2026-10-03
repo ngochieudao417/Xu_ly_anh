@@ -21,3 +21,6 @@ task*.md
 
 # Local Claude Code session settings
 .claude/
+
+# Anh JPEG tam sinh ra khi dong goi DOCX
+_docx_img/
