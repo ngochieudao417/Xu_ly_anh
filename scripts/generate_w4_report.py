@@ -152,6 +152,20 @@ def main():
 
     doc.add_heading("5. Phân tích theo khoảng cách và hướng", 1)
     if (OUT / "roads_map.png").exists(): picture(doc,"roads_map.png","Hình 3. Các đường lớn từ OpenStreetMap quanh AOI; phần trong ranh sân bay được loại khỏi mạng đường phân tích.")
+    gee_roads_path = OUT / "gee_roads.json"
+    if gee_roads_path.exists():
+        g = json.loads(gee_roads_path.read_text(encoding="utf-8"))
+        para(doc,"Mạng đường này đã được đưa lên Google Earth Engine và để chính GEE vẽ cũng như kiểm tra lại, thay vì chỉ tin vào kết quả tính cục bộ. Các con số dưới đây do GEE tính trên máy chủ bằng ee.Geometry.length và ee.Geometry.intersection.")
+        table(doc,["Đại lượng","Giá trị do GEE tính"],[
+            ["Số đoạn đường", str(g["n_segments"])],
+            ["Tổng chiều dài", f"{g['total_length_m']:,.0f} m".replace(",", ".")],
+            ["Chiều dài nằm trong hàng rào sân bay", f"{g['length_inside_airport_m']:.2f} m"],
+            ["Diện tích polygon sân bay", f"{g['airport_area_ha']:,.1f} ha".replace(",", ".")],
+            ["Số tên/mã tuyến", str(len([n for n in g["names"] if n]))],
+        ])
+        para(doc,f"GEE xác nhận {g['length_inside_airport_m']:.2f} m đường nằm trong hàng rào sân bay, tức yêu cầu không vẽ đường bên trong sân bay đã đạt. Đây là kiểm chứng độc lập với phép tính cục bộ bằng shapely, hai bên cho cùng kết quả.")
+        if (OUT / "gee_roads_map.png").exists():
+            picture(doc,"gee_roads_map.png","Hình 4. Bản đồ do GEE vẽ: nền ảnh Sentinel-2 mùa khô 2024, đường màu vàng, ranh giới sân bay màu đỏ. Không có tuyến nào cắt vào trong hàng rào.")
     road_names = data.get("roads", [])
     if road_names:
         n_segments = len(json.loads((OUT / "roads.geojson").read_text(encoding="utf-8"))["features"])
@@ -225,10 +239,10 @@ def main():
                       f"so với tuyến Hough. Năm 2022 vùng lớn nhất chỉ {fmt(bu22['ha'],1)} ha và gần như "
                       f"tròn, độ thon dài {fmt(bu22['elongation'],2)}, nên không có hướng nào nổi trội.")
 
-        picture(doc, "hough_2022.png", "Hình 4. Hough trên biên Canny của NDBI năm 2022. Khu vực sân bay "
+        picture(doc, "hough_2022.png", "Hình 5. Hough trên biên Canny của NDBI năm 2022. Khu vực sân bay "
                                        "vẫn là đất canh tác, thấy rõ lưới bờ thửa; đoạn thẳng duy nhất tìm "
                                        "được nằm ở khu dân cư phía tây nam.")
-        picture(doc, "hough_2024.png", "Hình 5. Hough trên biên Canny của NDBI năm 2024. Nền công trình "
+        picture(doc, "hough_2024.png", "Hình 6. Hough trên biên Canny của NDBI năm 2024. Nền công trình "
                                        "sáng chạy theo hướng đông bắc – tây nam đã hình thành; đường viền "
                                        "xanh lá là vùng xây dựng liền thông lớn nhất.")
 
@@ -255,7 +269,7 @@ def main():
     doc.add_heading("7. Sản phẩm và giới hạn", 1)
     para(doc,"Các tệp kết quả gồm 10 PNG tách biên, 2 GeoTIFF NDBI, 2 GeoTIFF phân loại, CSV mật độ biên, CSV vành đai × 8 hướng, CSV khoảng cách đến đường (khi có nguồn đường) và analysis.json. Mã chạy lại: scripts/run_w4_local.py; mã tạo báo cáo: scripts/generate_w4_report.py.")
     para(doc,"WorldCover 2021 có thể đã lỗi thời ở công trường năm 2024. Ảnh Sentinel-2 cục bộ là cảnh đơn ngày, độ che mây khác nhau và không thay thế composite GEE trong báo cáo trước. Bề mặt xây dựng là lớp phổ gồm nhiều vật liệu, không tương đương hoàn toàn với bê tông. Các con số diện tích W4 là kết quả thực nghiệm của pipeline W4, không thay số liệu đã công bố từ mô hình GEE trước đó.")
-    para(doc,"Mã hiển thị các tuyến trên GEE đã được xuất thành scripts/w4_roads_gee.js. Tại thời điểm thực hiện, tài khoản dịch vụ GEE của dự án báo thiếu quyền serviceusage.services.use đối với project nth-period-425718-i5, nên mã này chưa được chạy trực tiếp trong GEE. Các CSV và hình trong báo cáo được tính và kiểm tra bằng pipeline Python cục bộ.")
+    para(doc,"Về phần chạy trên GEE: mã dán tay vào Code Editor nằm ở scripts/w4_roads_gee.js. Ở lần làm trước, tài khoản dịch vụ của dự án báo thiếu quyền serviceusage.services.use nên chưa chạy được, nhưng hạn chế đó nay không còn. Mạng đường đã được chạy thật trên GEE bằng scripts/run_w4_roads_on_gee.py, và chính GEE tính ra các số ở Mục 5 cùng bản đồ Hình 4. Các CSV phân tích không gian vẫn được tính bằng pipeline Python cục bộ, với mạng đường và ranh sân bay giống hệt, nên hai bên đối chiếu được với nhau.")
     para(doc,"Nguồn dữ liệu: ESA WorldCover 2021 v200 (https://esa-worldcover.org/en/data-access); Sentinel-2 L2A từ Earth Search STAC/Element84; mạng đường và ranh sân bay (nếu có) từ OpenStreetMap/Geofabrik (https://download.geofabrik.de/asia/vietnam.html).")
 
     # Keep all text, including table cells and captions, Times New Roman black.
