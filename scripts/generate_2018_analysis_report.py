@@ -25,6 +25,7 @@ from docx.shared import Pt, RGBColor, Inches
 
 from src import config as cfg
 from src.report_images import optimized
+from src.docx_cleanup import clean as clean_docx
 from src import validation, preprocessing, features
 
 BLACK = RGBColor(0, 0, 0)
@@ -346,6 +347,7 @@ def main():
     )
 
     doc.save(OUT_PATH)
+    clean_docx(OUT_PATH)
     print(f"[done] Da ghi {OUT_PATH}")
 
 

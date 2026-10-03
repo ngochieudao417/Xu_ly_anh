@@ -17,7 +17,8 @@ from docx.oxml import OxmlElement
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
-from src.report_images import optimized  # noqa: E402
+from src.report_images import optimized
+from src.docx_cleanup import clean as clean_docx  # noqa: E402
 OUT = ROOT / "outputs" / "w4"
 REPORT = ROOT / "reports" / "Bao_cao_Task_W4.docx"
 
@@ -257,6 +258,7 @@ def main():
                         run.font.name="Times New Roman";run.font.size=Pt(10);run.font.color.rgb=RGBColor(0,0,0)
     REPORT.parent.mkdir(exist_ok=True)
     doc.save(REPORT)
+    clean_docx(REPORT)
     print(REPORT)
 
 
