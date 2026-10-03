@@ -14,11 +14,7 @@ secrets/
 gee_service_account*.json
 key_GEE/
 
-# Raw/processed satellite data is typically large and not committed to git.
-# Remove these lines if you intend to version-control the data itself.
-data/raw/*
-!data/raw/.gitkeep
-!data/raw/README.md
-data/processed/*
-!data/processed/.gitkeep
-data/samples/*.tif
+# Satellite data, notebook outputs, and task handouts stay local.
+data/
+notebooks/
+task*.md
