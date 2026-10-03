@@ -42,17 +42,29 @@ def table(doc, headers, rows):
     return t
 
 
+# Anh dat trong o bang giup caption khong bi tach trang, nhung mot so trinh
+# nhap ben ngoai khong doc duoc cau truc long nhau nay. Dat PICTURE_IN_TABLE
+# = False de xuat anh thanh doan van thuong, cau truc phang va de doc hon.
+PICTURE_IN_TABLE = False
+
+
 def picture(doc, filename, caption):
     path = OUT / filename
     if not path.exists(): return
     path = optimized(path)
-    t = doc.add_table(rows=1, cols=1)
-    tr_pr = t.rows[0]._tr.get_or_add_trPr()
-    tr_pr.append(OxmlElement("w:cantSplit"))
-    cell = t.cell(0,0)
-    p = cell.paragraphs[0]; p.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    p.add_run().add_picture(str(path), width=Cm(14.5))
-    c = cell.add_paragraph(caption); c.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    if PICTURE_IN_TABLE:
+        t = doc.add_table(rows=1, cols=1)
+        tr_pr = t.rows[0]._tr.get_or_add_trPr()
+        tr_pr.append(OxmlElement("w:cantSplit"))
+        cell = t.cell(0, 0)
+        p = cell.paragraphs[0]; p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        p.add_run().add_picture(str(path), width=Cm(14.5))
+        c = cell.add_paragraph(caption); c.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    else:
+        p = doc.add_paragraph(); p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        p.add_run().add_picture(str(path), width=Cm(14.5))
+        c = doc.add_paragraph(caption); c.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        for r in c.runs: r.italic = True
     doc.add_paragraph()
 
 
