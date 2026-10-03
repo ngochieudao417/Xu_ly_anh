@@ -136,6 +136,8 @@ def main():
     if (OUT / "roads_map.png").exists(): picture(doc,"roads_map.png","Hình 3. Các đường lớn từ OpenStreetMap quanh AOI; phần trong ranh sân bay được loại khỏi mạng đường phân tích.")
     road_names = data.get("roads", [])
     if road_names:
+        n_segments = len(json.loads((OUT / "roads.geojson").read_text(encoding="utf-8"))["features"])
+        para(doc,f"Mạng đường gồm {n_segments} đoạn thuộc {len(road_names)} tên/mã tuyến. Đối chiếu hình học với polygon sân bay OSM cho kết quả 0 m đường nằm trong ranh sân bay.")
         para(doc,"Các tuyến hoặc mã tuyến đã vẽ: " + "; ".join(road_names) + ".")
     else:
         para(doc,"Chưa có đường OSM đủ điều kiện để tính khoảng cách đến đường; mục này không được suy đoán từ ảnh. Các bảng vành đai và hướng vẫn được tính từ bản đồ phân loại.")
@@ -150,6 +152,7 @@ def main():
     doc.add_heading("6. Sản phẩm và giới hạn", 1)
     para(doc,"Các tệp kết quả gồm 10 PNG tách biên, 2 GeoTIFF NDBI, 2 GeoTIFF phân loại, CSV mật độ biên, CSV vành đai × 8 hướng, CSV khoảng cách đến đường (khi có nguồn đường) và analysis.json. Mã chạy lại: scripts/run_w4_local.py; mã tạo báo cáo: scripts/generate_w4_report.py.")
     para(doc,"WorldCover 2021 có thể đã lỗi thời ở công trường năm 2024. Ảnh Sentinel-2 cục bộ là cảnh đơn ngày, độ che mây khác nhau và không thay thế composite GEE trong báo cáo trước. Bề mặt xây dựng là lớp phổ gồm nhiều vật liệu, không tương đương hoàn toàn với bê tông. Các con số diện tích W4 là kết quả thực nghiệm của pipeline W4, không thay số liệu đã công bố từ mô hình GEE trước đó.")
+    para(doc,"Mã hiển thị các tuyến trên GEE đã được xuất thành scripts/w4_roads_gee.js. Tại thời điểm thực hiện, tài khoản dịch vụ GEE của dự án báo thiếu quyền serviceusage.services.use đối với project nth-period-425718-i5, nên mã này chưa được chạy trực tiếp trong GEE. Các CSV và hình trong báo cáo được tính và kiểm tra bằng pipeline Python cục bộ.")
     para(doc,"Nguồn dữ liệu: ESA WorldCover 2021 v200 (https://esa-worldcover.org/en/data-access); Sentinel-2 L2A từ Earth Search STAC/Element84; mạng đường và ranh sân bay (nếu có) từ OpenStreetMap/Geofabrik (https://download.geofabrik.de/asia/vietnam.html).")
 
     # Keep all text, including table cells and captions, Times New Roman black.
