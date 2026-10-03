@@ -1,0 +1,20 @@
+{
+  "airport_area_ha": 4766.144944485506,
+  "length_inside_airport_m": 0,
+  "n_segments": 75,
+  "names": [
+    "Cầu vượt Nút giao Long Thành",
+    "Cầu Đá Vàng",
+    "Hương lộ 10",
+    "Quốc lộ 51",
+    "Đường T1",
+    "Đường T2",
+    "Đường cao tốc Biên Hòa – Vũng Tàu",
+    "Đường cao tốc Thành phố Hồ Chí Minh – Long Thành – Dầu Giây",
+    "Đường tỉnh 769",
+    "Đường tỉnh 773"
+  ],
+  "total_length_m": 72757.3118963281,
+  "base_year": 2024,
+  "note": "Moi con so trong tep nay do chinh GEE tinh tren may chu (ee.Geometry.length / intersection), khong phai tinh cuc bo."
+}

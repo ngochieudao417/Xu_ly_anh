@@ -1,0 +1,12 @@
+{
+  "source": "https://download.geofabrik.de/asia/vietnam-latest.osm.pbf",
+  "retrieved_utc": "2026-10-03T15:14:22.375751+00:00",
+  "road_segments": 93,
+  "airport_name": "Sân bay quốc tế Long Thành",
+  "bbox_wgs84": [
+    106.97,
+    10.72,
+    107.12,
+    10.83
+  ]
+}

@@ -1,0 +1,411 @@
+{
+  "source": "AWS/STAC single Sentinel-2 scenes; B11/B12 re-read at native 20m and cubic-resampled to 10m. These are not GEE median composites.",
+  "worldcover": "https://esa-worldcover.s3.amazonaws.com/v200/2021/map/ESA_WorldCover_10m_2021_v200_N09E105_Map.tif",
+  "years": {
+    "2022": {
+      "valid_pixels": 944690,
+      "canny_thresholds": {
+        "low": 0.02962988018989563,
+        "high": 0.07407470047473907,
+        "percentile_high": 90,
+        "min_component_px": 8
+      },
+      "canny_edge_pct": 3.1507690353449282,
+      "models": [
+        {
+          "bo_dac_trung": "Gốc 9",
+          "so_dac_trung": 9,
+          "OA": 0.8166666666666667,
+          "Kappa": 0.7555555555555555,
+          "train_n": 840,
+          "test_n": 360,
+          "confusion_matrix": [
+            [
+              90,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              76,
+              2,
+              12
+            ],
+            [
+              0,
+              8,
+              66,
+              16
+            ],
+            [
+              0,
+              19,
+              9,
+              62
+            ]
+          ],
+          "features": [
+            "B2",
+            "B3",
+            "B4",
+            "B8",
+            "B11",
+            "B12",
+            "NDVI",
+            "NDBI",
+            "NDWI"
+          ]
+        },
+        {
+          "bo_dac_trung": "Gốc + biên 11",
+          "so_dac_trung": 11,
+          "OA": 0.8222222222222222,
+          "Kappa": 0.762962962962963,
+          "train_n": 840,
+          "test_n": 360,
+          "confusion_matrix": [
+            [
+              90,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              76,
+              1,
+              13
+            ],
+            [
+              0,
+              4,
+              67,
+              19
+            ],
+            [
+              0,
+              18,
+              9,
+              63
+            ]
+          ],
+          "features": [
+            "B2",
+            "B3",
+            "B4",
+            "B8",
+            "B11",
+            "B12",
+            "NDVI",
+            "NDBI",
+            "NDWI",
+            "edge_density",
+            "sobel_gradient"
+          ]
+        },
+        {
+          "bo_dac_trung": "Gốc + biên + GLCM 15",
+          "so_dac_trung": 15,
+          "OA": 0.825,
+          "Kappa": 0.7666666666666666,
+          "train_n": 840,
+          "test_n": 360,
+          "confusion_matrix": [
+            [
+              90,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              75,
+              3,
+              12
+            ],
+            [
+              0,
+              3,
+              71,
+              16
+            ],
+            [
+              0,
+              18,
+              11,
+              61
+            ]
+          ],
+          "features": [
+            "B2",
+            "B3",
+            "B4",
+            "B8",
+            "B11",
+            "B12",
+            "NDVI",
+            "NDBI",
+            "NDWI",
+            "edge_density",
+            "sobel_gradient",
+            "glcm_contrast",
+            "glcm_entropy",
+            "glcm_homogeneity",
+            "glcm_dissimilarity"
+          ]
+        }
+      ],
+      "year_specific_winner": "Gốc + biên + GLCM 15",
+      "spatial_model": "Gốc + biên + GLCM 15",
+      "builtup_ha_all_valid": 1022.2321091972701,
+      "builtup_ha": 1013.8493857653559
+    },
+    "2024": {
+      "valid_pixels": 1005781,
+      "canny_thresholds": {
+        "low": 0.02299550622701645,
+        "high": 0.05748876556754112,
+        "percentile_high": 90,
+        "min_component_px": 8
+      },
+      "canny_edge_pct": 2.7999136989066207,
+      "models": [
+        {
+          "bo_dac_trung": "Gốc 9",
+          "so_dac_trung": 9,
+          "OA": 0.7821229050279329,
+          "Kappa": 0.7094881398252184,
+          "train_n": 836,
+          "test_n": 358,
+          "confusion_matrix": [
+            [
+              88,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              68,
+              9,
+              13
+            ],
+            [
+              0,
+              2,
+              74,
+              14
+            ],
+            [
+              0,
+              21,
+              19,
+              50
+            ]
+          ],
+          "features": [
+            "B2",
+            "B3",
+            "B4",
+            "B8",
+            "B11",
+            "B12",
+            "NDVI",
+            "NDBI",
+            "NDWI"
+          ]
+        },
+        {
+          "bo_dac_trung": "Gốc + biên 11",
+          "so_dac_trung": 11,
+          "OA": 0.8016759776536313,
+          "Kappa": 0.7355597170203911,
+          "train_n": 836,
+          "test_n": 358,
+          "confusion_matrix": [
+            [
+              88,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              73,
+              7,
+              10
+            ],
+            [
+              0,
+              2,
+              75,
+              13
+            ],
+            [
+              0,
+              20,
+              19,
+              51
+            ]
+          ],
+          "features": [
+            "B2",
+            "B3",
+            "B4",
+            "B8",
+            "B11",
+            "B12",
+            "NDVI",
+            "NDBI",
+            "NDWI",
+            "edge_density",
+            "sobel_gradient"
+          ]
+        },
+        {
+          "bo_dac_trung": "Gốc + biên + GLCM 15",
+          "so_dac_trung": 15,
+          "OA": 0.7905027932960894,
+          "Kappa": 0.7206674850710555,
+          "train_n": 836,
+          "test_n": 358,
+          "confusion_matrix": [
+            [
+              88,
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              75,
+              8,
+              7
+            ],
+            [
+              0,
+              2,
+              76,
+              12
+            ],
+            [
+              1,
+              24,
+              21,
+              44
+            ]
+          ],
+          "features": [
+            "B2",
+            "B3",
+            "B4",
+            "B8",
+            "B11",
+            "B12",
+            "NDVI",
+            "NDBI",
+            "NDWI",
+            "edge_density",
+            "sobel_gradient",
+            "glcm_contrast",
+            "glcm_entropy",
+            "glcm_homogeneity",
+            "glcm_dissimilarity"
+          ]
+        }
+      ],
+      "year_specific_winner": "Gốc + biên 11",
+      "spatial_model": "Gốc + biên + GLCM 15",
+      "builtup_ha_all_valid": 2571.6554956126097,
+      "builtup_ha": 2340.340344491388
+    }
+  },
+  "roads": [
+    "Cầu vượt Nút giao Long Thành",
+    "Cầu Đá Vàng",
+    "Hương lộ 10",
+    "Quốc lộ 51",
+    "Đường T1",
+    "Đường T2",
+    "Đường cao tốc Biên Hòa – Vũng Tàu",
+    "Đường cao tốc Thành phố Hồ Chí Minh – Long Thành – Dầu Giây",
+    "Đường tỉnh 769",
+    "Đường tỉnh 773"
+  ],
+  "label_counts": {
+    "Water": 920,
+    "Vegetation": 895575,
+    "Bare Soil": 14036,
+    "Built-up": 34159
+  },
+  "common_valid_pixels": 933143,
+  "pixel_area_ha": 0.010003249918752032,
+  "common_valid_area_ha": 9334.462638934026,
+  "edge_density_by_class": [
+    {
+      "year": 2022,
+      "class": "Water",
+      "reference": "ESA WorldCover 2021",
+      "n_pixels": 920,
+      "mean_edge_density": 0.1272626519203186,
+      "mean_sobel_gradient": 0.09456678479909897
+    },
+    {
+      "year": 2022,
+      "class": "Vegetation",
+      "reference": "ESA WorldCover 2021",
+      "n_pixels": 895575,
+      "mean_edge_density": 0.030872242525219917,
+      "mean_sobel_gradient": 0.02550860121846199
+    },
+    {
+      "year": 2022,
+      "class": "Bare Soil",
+      "reference": "ESA WorldCover 2021",
+      "n_pixels": 14036,
+      "mean_edge_density": 0.01954595185816288,
+      "mean_sobel_gradient": 0.025015939027071
+    },
+    {
+      "year": 2022,
+      "class": "Built-up",
+      "reference": "ESA WorldCover 2021",
+      "n_pixels": 34159,
+      "mean_edge_density": 0.050500329583883286,
+      "mean_sobel_gradient": 0.03613895922899246
+    },
+    {
+      "year": 2024,
+      "class": "Water",
+      "reference": "ESA WorldCover 2021",
+      "n_pixels": 922,
+      "mean_edge_density": 0.10024791210889816,
+      "mean_sobel_gradient": 0.05076262354850769
+    },
+    {
+      "year": 2024,
+      "class": "Vegetation",
+      "reference": "ESA WorldCover 2021",
+      "n_pixels": 945251,
+      "mean_edge_density": 0.027452442795038223,
+      "mean_sobel_gradient": 0.018786316737532616
+    },
+    {
+      "year": 2024,
+      "class": "Bare Soil",
+      "reference": "ESA WorldCover 2021",
+      "n_pixels": 18066,
+      "mean_edge_density": 0.027657095342874527,
+      "mean_sobel_gradient": 0.021993203088641167
+    },
+    {
+      "year": 2024,
+      "class": "Built-up",
+      "reference": "ESA WorldCover 2021",
+      "n_pixels": 41542,
+      "mean_edge_density": 0.038982927799224854,
+      "mean_sobel_gradient": 0.02292473614215851
+    }
+  ]
+}

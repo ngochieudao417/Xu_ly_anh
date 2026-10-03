@@ -1,0 +1,71 @@
+{
+  "method": {
+    "edge": "Canny (cùng tham số với run_w4_local.py)",
+    "hough": "probabilistic_hough_line của scikit-image",
+    "min_segment_m": 1500,
+    "line_gap_px": 20,
+    "angle_tolerance_deg": 7.0,
+    "seed": 42,
+    "scope": "chỉ xét trong ranh giới sân bay OSM"
+  },
+  "years": {
+    "2022": {
+      "edge_px_in_airport": 14287,
+      "n_segments": 1,
+      "n_groups": 1,
+      "min_segment_m": 1500,
+      "dominant_bearing_deg": 130.98,
+      "dominant_total_len_m": 2120.1,
+      "dominant_max_len_m": 2120.1,
+      "dominant_n_segments": 1,
+      "classic_hough_peak_bearings": [
+        5.0,
+        163.0,
+        135.0,
+        149.0,
+        145.0
+      ],
+      "dominant_builtup_pct": 19.3,
+      "airport_axis_bearing_deg": 53.69,
+      "airport_axis_len_m": 10059.6,
+      "builtup_largest_component": {
+        "px": 778,
+        "ha": 7.8,
+        "bearing_deg": 95.19,
+        "elongation": 1.56,
+        "n_components": 4143
+      },
+      "bearing_diff_vs_builtup_axis_deg": 35.79,
+      "longest_single_segment_m": 2120.1
+    },
+    "2024": {
+      "edge_px_in_airport": 7010,
+      "n_segments": 3,
+      "n_groups": 3,
+      "min_segment_m": 1500,
+      "dominant_bearing_deg": 45.0,
+      "dominant_total_len_m": 2221.0,
+      "dominant_max_len_m": 2221.0,
+      "dominant_n_segments": 1,
+      "classic_hough_peak_bearings": [
+        140.0,
+        145.0,
+        150.0,
+        161.0,
+        147.0
+      ],
+      "dominant_builtup_pct": 83.8,
+      "airport_axis_bearing_deg": 53.69,
+      "airport_axis_len_m": 10059.6,
+      "builtup_largest_component": {
+        "px": 24379,
+        "ha": 243.8,
+        "bearing_deg": 55.01,
+        "elongation": 4.84,
+        "n_components": 3815
+      },
+      "bearing_diff_vs_builtup_axis_deg": 10.01,
+      "longest_single_segment_m": 2221.0
+    }
+  }
+}
