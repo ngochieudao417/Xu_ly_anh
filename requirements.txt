@@ -17,3 +17,4 @@ pyproj==3.7.2
 pyogrio==0.13.0
 Pillow==12.3.0
 affine==3.0.0
+scikit-image==0.26.0

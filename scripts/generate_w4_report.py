@@ -149,7 +149,92 @@ def main():
     para(doc,"Ba vành đai chỉ bao phủ phần nằm trong bán kính 6 km quanh tâm dự án. Phần AOI nằm ngoài 6 km không được đưa vào bảng vành đai, nhưng vẫn được tính trong bảng khoảng cách đến đường.")
 
     doc.add_page_break()
-    doc.add_heading("6. Sản phẩm và giới hạn", 1)
+    doc.add_heading("6. Thử biến đổi Hough để tự tìm đường băng", 1)
+    hough_path = OUT / "hough.json"
+    if not hough_path.exists():
+        para(doc, "Chưa chạy scripts/run_w4_hough.py nên mục này bỏ trống.")
+    else:
+        hough = json.loads(hough_path.read_text(encoding="utf-8"))
+        m = hough["method"]
+        para(doc, "Đây là mục cuối của đề bài, phần làm thêm nếu còn thời gian. Câu hỏi đặt ra là liệu "
+                  "máy có tự tìm được đường băng hay không mà không cần bất kỳ nhãn nào. Nếu tìm được thì "
+                  "đó là bằng chứng độc lập cho việc bề mặt đã chuyển sang công trình nhân tạo, vì đường "
+                  "băng là vật thể dài và thẳng nhất trong khu vực.")
+        para(doc, f"Cách làm: lấy ảnh biên Canny đúng tham số đã dùng ở mục 2, giới hạn trong ranh giới "
+                  f"sân bay OSM, rồi chạy {m['hough']}. Chỉ giữ các đoạn thẳng dài từ "
+                  f"{m['min_segment_m']} m trở lên, gom các đoạn lệch nhau dưới "
+                  f"{m['angle_tolerance_deg']}° thành một tuyến.")
+        para(doc, "Về tham số nối đoạn: biên Canny bên trong sân bay bị đứt quãng nên phải cho phép nối. "
+                  "Nhóm đã thử các mức 12, 20, 30, 50 và 80 điểm ảnh. Từ 30 điểm ảnh trở lên, Hough bắt "
+                  "đầu nối nhầm các mảnh biên rời rạc không liên quan thành những đường dài 7 đến 10 km, "
+                  "vô lý với một ô chỉ rộng khoảng 11 km. Vì vậy chốt ở mức 20 điểm ảnh, tương đương "
+                  "200 m, là mức cao nhất còn cho kết quả hợp lý về mặt vật lý.")
+
+        rows = []
+        for year in ("2022", "2024"):
+            y = hough["years"][year]
+            rows.append([year, str(y["n_segments"]),
+                         fmt(y["dominant_bearing_deg"], 1) + "°" if y["dominant_bearing_deg"] is not None else "—",
+                         fmt(y["dominant_max_len_m"], 0) + " m" if y["dominant_max_len_m"] is not None else "—",
+                         fmt(y["dominant_builtup_pct"], 1) + "%" if y["dominant_builtup_pct"] is not None else "—"])
+        table(doc, ["Năm", "Số đoạn đạt ngưỡng", "Phương vị tuyến trội", "Đoạn dài nhất",
+                    "Tỷ lệ trùng lớp xây dựng"], rows)
+
+        y22, y24 = hough["years"]["2022"], hough["years"]["2024"]
+        para(doc, f"Năm 2022 chỉ có đúng 1 đoạn đạt ngưỡng, phương vị {fmt(y22['dominant_bearing_deg'],1)}°, "
+                  f"và chỉ {fmt(y22['dominant_builtup_pct'],1)}% số điểm trên đoạn đó chạm lớp xây dựng. "
+                  f"Nhìn vào hình thì đây là một bờ thửa trong khu dân cư phía tây nam, không liên quan "
+                  f"tới đường băng. Năm 2024 có {y24['n_segments']} đoạn đạt ngưỡng và cả ba đều bám sát "
+                  f"công trình: tuyến trội có phương vị {fmt(y24['dominant_bearing_deg'],1)}°, dài "
+                  f"{fmt(y24['dominant_max_len_m'],0)} m, với {fmt(y24['dominant_builtup_pct'],1)}% số điểm "
+                  f"trùng lớp xây dựng.")
+
+        bu22, bu24 = y22.get("builtup_largest_component"), y24.get("builtup_largest_component")
+        if bu22 and bu24:
+            table(doc, ["Năm", "Vùng xây dựng liền thông lớn nhất", "Trục chính", "Độ thon dài",
+                        "Lệch so với tuyến Hough"],
+                  [["2022", fmt(bu22["ha"], 1) + " ha", fmt(bu22["bearing_deg"], 1) + "°",
+                    fmt(bu22["elongation"], 2),
+                    fmt(y22["bearing_diff_vs_builtup_axis_deg"], 1) + "°"],
+                   ["2024", fmt(bu24["ha"], 1) + " ha", fmt(bu24["bearing_deg"], 1) + "°",
+                    fmt(bu24["elongation"], 2),
+                    fmt(y24["bearing_diff_vs_builtup_axis_deg"], 1) + "°"]])
+            para(doc, "Để kiểm chứng mà không dùng lại Hough, nhóm tính thêm trục chính của vùng xây dựng "
+                      "liền thông lớn nhất bằng phân tích thành phần chính. Cách này không dùng ảnh biên "
+                      "và không dùng Hough nên hoàn toàn độc lập. Năm 2024 vùng này rộng "
+                      f"{fmt(bu24['ha'],1)} ha với độ thon dài {fmt(bu24['elongation'],2)}, trục chính "
+                      f"{fmt(bu24['bearing_deg'],1)}°, lệch {fmt(y24['bearing_diff_vs_builtup_axis_deg'],1)}° "
+                      f"so với tuyến Hough. Năm 2022 vùng lớn nhất chỉ {fmt(bu22['ha'],1)} ha và gần như "
+                      f"tròn, độ thon dài {fmt(bu22['elongation'],2)}, nên không có hướng nào nổi trội.")
+
+        picture(doc, "hough_2022.png", "Hình 4. Hough trên biên Canny của NDBI năm 2022. Khu vực sân bay "
+                                       "vẫn là đất canh tác, thấy rõ lưới bờ thửa; đoạn thẳng duy nhất tìm "
+                                       "được nằm ở khu dân cư phía tây nam.")
+        picture(doc, "hough_2024.png", "Hình 5. Hough trên biên Canny của NDBI năm 2024. Nền công trình "
+                                       "sáng chạy theo hướng đông bắc – tây nam đã hình thành; đường viền "
+                                       "xanh lá là vùng xây dựng liền thông lớn nhất.")
+
+        para(doc, "Kết luận của mục này cần nói thẳng cả phần làm được và phần chưa làm được. Hough tìm ra "
+                  f"đúng hướng của tổ hợp công trình, {fmt(y24['dominant_bearing_deg'],1)}°, và hướng này "
+                  f"khớp với trục chính của vùng xây dựng tính độc lập, {fmt(bu24['bearing_deg'],1)}°, "
+                  "chênh nhau 10°. Hai phương pháp không liên quan cùng chỉ về một hướng đông bắc – tây "
+                  "nam, nên kết quả về hướng là đáng tin." if bu24 else "")
+        para(doc, "Tuy nhiên Hough không khoanh được bản thân đường băng. Nhìn Hình 5 sẽ thấy lý do: mặt "
+                  "nền công trình rất đồng nhất về phổ, nên bên trong nó gần như không có biên nào để "
+                  "Hough bám vào; toàn bộ biên Canny dồn ra rìa, nơi tiếp giáp với ruộng xung quanh. Vì "
+                  "vậy các đoạn thẳng tìm được là ranh của nền công trình chứ không phải tim đường băng. "
+                  "Thêm nữa, ở độ phân giải 10 m thì đường băng rộng 45 m chỉ chiếm khoảng 4 đến 5 điểm "
+                  "ảnh ngang, lại nằm giữa sân đỗ và đường lăn cũng bằng bê tông, nên độ tương phản gần "
+                  "như bằng không. Muốn tách riêng đường băng thì phải dùng ảnh phân giải cao hơn, "
+                  "khoảng 1 đến 2 m, chứ không phải chỉnh thêm tham số Hough.")
+        para(doc, "Dù vậy, phép thử vẫn trả lời được một câu hỏi có ích: giữa hai mốc, chỉ năm 2024 mới "
+                  "xuất hiện cấu trúc thẳng và dài gắn với lớp xây dựng, còn năm 2022 thì không. Điều này "
+                  "thống nhất với kết quả phân loại và với phần tách biên ở các mục trên.")
+        para(doc, "Mã chạy lại: scripts/run_w4_hough.py. Kết quả số nằm ở outputs/w4/hough.json và "
+                  "outputs/w4/hough_lines.csv.")
+
+    doc.add_page_break()
+    doc.add_heading("7. Sản phẩm và giới hạn", 1)
     para(doc,"Các tệp kết quả gồm 10 PNG tách biên, 2 GeoTIFF NDBI, 2 GeoTIFF phân loại, CSV mật độ biên, CSV vành đai × 8 hướng, CSV khoảng cách đến đường (khi có nguồn đường) và analysis.json. Mã chạy lại: scripts/run_w4_local.py; mã tạo báo cáo: scripts/generate_w4_report.py.")
     para(doc,"WorldCover 2021 có thể đã lỗi thời ở công trường năm 2024. Ảnh Sentinel-2 cục bộ là cảnh đơn ngày, độ che mây khác nhau và không thay thế composite GEE trong báo cáo trước. Bề mặt xây dựng là lớp phổ gồm nhiều vật liệu, không tương đương hoàn toàn với bê tông. Các con số diện tích W4 là kết quả thực nghiệm của pipeline W4, không thay số liệu đã công bố từ mô hình GEE trước đó.")
     para(doc,"Mã hiển thị các tuyến trên GEE đã được xuất thành scripts/w4_roads_gee.js. Tại thời điểm thực hiện, tài khoản dịch vụ GEE của dự án báo thiếu quyền serviceusage.services.use đối với project nth-period-425718-i5, nên mã này chưa được chạy trực tiếp trong GEE. Các CSV và hình trong báo cáo được tính và kiểm tra bằng pipeline Python cục bộ.")
